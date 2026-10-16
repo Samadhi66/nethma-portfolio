@@ -22,7 +22,6 @@ export const projects = [
     ],
     contributions: ['Designed and developed the full-stack application and frontend/backend integration.', 'Built transaction workflows, SQLite persistence, validation and duplicate checks.', 'Developed financial dashboards and integrated predictive models.', 'Integrated receipt extraction and voice expense entry with a review step.'],
     testing: ['Implemented transaction input validation and duplicate detection.', 'Evaluated prediction models with R², MAE and RMSE.', 'Evaluated classification models with precision, recall and F1-score.'],
-    evidenceNote: 'The CV identifies the evaluation methods, but does not include numerical scores or test reports. No performance results are claimed here.',
     screenshotLabels: ['Spending dashboard', 'Transaction workflow', 'Receipt or voice entry'], screenshots: [],
   },
   {
@@ -41,7 +40,7 @@ export const projects = [
     technologies: ['PHP', 'MySQL'],
     features: [{title: 'Inventory records', text: 'Database-backed functionality for managing medicine inventory and related records.'}, {title: 'Order management', text: 'Order-management and tracking functionality.'}, {title: 'Reporting & dashboards', text: 'Reporting and dashboard features for medicines, orders and related records.'}],
     contributions: ['Developed frontend and backend functionality.', 'Implemented database-backed inventory and order management.', 'Created tracking, reporting and dashboard features.'],
-    testing: [], evidenceNote: 'The CV does not document project-specific testing methods or results. Testing evidence can be added when available.',
+    testing: [],
     screenshotLabels: ['Inventory records', 'Order management', 'Reporting dashboard'], screenshots: [],
   },
   {
@@ -60,7 +59,7 @@ export const projects = [
     technologies: ['HTML', 'CSS', 'JavaScript', 'PHP'],
     features: [{title: 'Book catalogue', text: 'Frontend and backend features for book cataloguing.'}, {title: 'Member management', text: 'Member-management functionality and related library workflows.'}, {title: 'User-facing forms', text: 'Forms supporting the application’s workflows.'}],
     contributions: ['Developed frontend and backend features for book cataloguing and member management.', 'Implemented user-facing forms and library workflows.', 'Tested form interactions during development.'],
-    testing: ['Tested form interactions during development.'], evidenceNote: 'The CV does not include a formal test report, coverage figures or measured outcomes.',
+    testing: ['Tested form interactions during development.'],
     screenshotLabels: ['Book catalogue', 'Member management'], screenshots: [],
   },
   {
@@ -79,7 +78,7 @@ export const projects = [
     technologies: ['Android Studio'],
     features: [{title: 'User registration', text: 'Registration workflows and user-facing screens.'}, {title: 'Service booking', text: 'Workflows for booking a cleaning service.'}, {title: 'Appointment scheduling', text: 'Appointment-scheduling functionality and form interactions.'}],
     contributions: ['Built registration, service-booking and appointment-scheduling workflows.', 'Developed user-facing application screens.', 'Tested forms and application interactions.'],
-    testing: ['Tested forms and application interactions.'], evidenceNote: 'No device matrix, formal test results or published app link is supplied in the CV.',
+    testing: ['Tested forms and application interactions.'],
     screenshotLabels: ['Service booking', 'Appointment scheduling'], screenshots: [],
   },
 ];

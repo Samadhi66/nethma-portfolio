@@ -124,8 +124,10 @@ test('clipboard denial gives a usable selection fallback without false success',
 });
 test('all direct case routes include problem, architecture, contribution and scoped validation',()=>{
   for(const project of projects){mount(`/projects/${project.slug}`);
-    for(const id of ['overview','problem','features','architecture','contributions','testing'])assert.ok(document.getElementById(id));
-    assert.ok(screen.getByText(project.problem));assert.ok(screen.getByText(project.evidenceNote));
+    for(const id of ['overview','problem','features','architecture','contributions'])assert.ok(document.getElementById(id));
+    assert.ok(screen.getByText(project.problem));
+    assert.equal(Boolean(document.getElementById('testing')),project.testing.length>0);
+    for(const item of project.testing)assert.ok(document.getElementById('testing').textContent.includes(item));
     assert.equal(document.querySelectorAll('.screenshot-placeholder').length,0);cleanup();
   }
 });
