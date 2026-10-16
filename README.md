@@ -1,61 +1,186 @@
-# Nethma Samadhi — Midnight & Mint
+# Nethma Samadhi — Personal Portfolio
 
-A responsive React portfolio based on the supplied CV. Built with React 19, Vite 6, Tailwind CSS 4, React Router 7, Motion and Lucide React. Fonts are bundled locally: Manrope, Inter and JetBrains Mono.
+**Software Development · Quality Assurance · Web & SEO · Data Analysis**
 
-## Run locally
+A modern, responsive personal portfolio presenting my technical background, professional experience, academic projects and interests across software engineering and digital technologies.
 
-Requires Node.js 22 or newer (validated with Node 24).
+Designed with a **Midnight & Mint** visual identity, focusing on clean typography, intuitive navigation, accessibility and a consistent user experience.
 
-```powershell
-cd "E:\GitHub-Projects\nethma-portfolio"
+**[View Live Portfolio](https://nethma.vercel.app/)** · **[GitHub Profile](https://github.com/Samadhi66)** · **[Contact Me](mailto:nethmasamadhi66@gmail.com)**
+
+---
+
+## About Me
+
+I'm Nethma Samadhi, a Software Engineering undergraduate at ICBT Campus, with my academic studies completed and graduation pending.
+
+I have hands-on experience developing full-stack web applications, mobile applications and data-driven solutions. I currently work as a Web Content & SEO Assistant at eBEYONDS, where I contribute to website content management, on-page optimization and digital workflows.
+
+My interests span software and web development, software quality, technical analysis, data-driven applications and digital operations.
+
+## Portfolio Features
+
+- Modern Midnight & Mint visual design
+- Responsive layouts for desktop, tablet and mobile
+- Professional introduction and downloadable CV
+- Featured software projects with individual case-study pages
+- Professional experience and technical expertise sections
+- Education and background information
+- Contact options and professional profile links
+- Accessible navigation and reduced-motion support
+- SEO-oriented page metadata and route-specific content
+
+## Featured Projects
+
+### 01. FinAI — AI-Powered Financial Intelligence System
+
+A full-stack financial application integrating transaction management, interactive financial dashboards and machine-learning functionality.
+
+**Key features:** Transaction CRUD, spending insights, budget and transaction-amount prediction, behavioral fraud detection, receipt extraction and voice-assisted expense entry.
+
+**Technologies:** React, Vite, Python, FastAPI, SQLite, Scikit-learn, EasyOCR and Browser Speech API.
+
+### 02. Ayurvedic Medicine Management System
+
+A database-driven application designed to support medicine inventory, order management, record tracking and reporting.
+
+**Technologies:** PHP and MySQL.
+
+### 03. Library Management Website
+
+A web application supporting book cataloguing, member management and library-related workflows.
+
+**Technologies:** HTML, CSS, JavaScript and PHP.
+
+### 04. Cleaning Service Mobile App
+
+A mobile application featuring user registration, service booking and appointment scheduling.
+
+**Development environment:** Android Studio.
+
+Each project is presented through an individual case study detailing its purpose, functionality, technologies and verified implementation information.
+
+## Portfolio Technology Stack
+
+| Category | Technologies |
+|---|---|
+| Frontend | React 19, JavaScript, HTML5, CSS3 |
+| Build Tool | Vite 6 |
+| Styling | Tailwind CSS 4, custom CSS |
+| Routing | React Router 7 |
+| Animation | Motion |
+| Icons | Lucide React |
+| Fonts | Manrope, Inter, JetBrains Mono |
+| Deployment | Vercel |
+| Version Control | Git and GitHub |
+
+## Getting Started
+
+To run the portfolio locally, use Node.js 22 or newer.
+
+**1. Clone the repository**
+
+```bash
+git clone https://github.com/Samadhi66/nethma-portfolio.git
+cd nethma-portfolio
+```
+
+**2. Install dependencies**
+
+```bash
 npm ci
+```
+
+**3. Start the development server**
+
+```bash
 npm run dev
 ```
 
-Open the local URL printed by Vite, normally http://127.0.0.1:5173.
+Open the local address displayed by Vite.
 
-```powershell
+### Available Commands
+
+```bash
+npm run dev
 npm run lint
 npm run build
 npm test
 npm run preview
 ```
 
-The build prerenders the homepage, all four case studies and a 404 page, including route-specific titles and descriptions. React hydrates the HTML for client-side navigation. `dist/` is generated output. Run tests after building.
+These commands support local development, code-quality checks, production builds, automated tests and build previews.
 
-## Routes
+## Project Structure
 
-- `/`
-- `/projects/finai`
-- `/projects/ayurvedic-medicine`
-- `/projects/library-management`
-- `/projects/cleaning-service`
+```text
+nethma-portfolio/
+├── public/             # Public assets and downloadable CV
+├── scripts/            # Supporting build and content scripts
+├── src/
+│   ├── components/     # Reusable interface components
+│   ├── data/           # Profile and project information
+│   ├── pages/          # Homepage and project case studies
+│   └── styles.css      # Visual styling and responsive layout
+├── tests/              # Automated tests
+├── index.html
+├── package.json
+├── vite.config.js
+└── vercel.json
+```
 
-## Edit content
+## Design Philosophy
 
-- `src/data/profile.js`: identity, verified social links, experience, expertise and education.
-- `src/data/projects.js`: verified project descriptions, technologies, contributions and testing information.
-- `src/components/`: reusable navigation, contact, footer, tags, reveal and screenshot components.
-- `src/pages/`: homepage and case studies.
-- `src/styles.css`: Midnight & Mint design and responsive layout; Tailwind theme tokens.
-- `public/Nethma-Samadhi-CV.pdf`: reformatted public CV excluding home address, phone number and references. The original supplied PDF is unchanged and is not included in the public build.
-- `scripts/create-public-cv.py`: optional PDF regeneration using Python and ReportLab; not required for the website build.
+The portfolio follows a minimal, editorial approach that prioritizes content and usability.
 
+Its Midnight & Mint design emphasizes:
 
-## Project evidence still needed
+- Thoughtful typography and spacing
+- Restrained color and animation
+- Clear project storytelling
+- Responsive layouts
+- Accessible interactions
+- Consistent components
+- Practical, maintainable frontend development
 
-Project covers are AI-generated interface concepts. The full prompt set and asset paths are documented in `PROJECT-INTERFACE-ARTWORK.md`. Responsive WebP variants replace the larger PNG covers in the UI. Three project repository links were supplied by the owner. Actual application screenshots, live demos, model scores and formal test reports are still needed. The site does not invent these. LinkedIn and GitHub profile links were extracted from the CV's hyperlink annotations.
+Project interface concepts are identified as illustrative visuals where authentic application screenshots have not yet been added.
 
-To add screenshots, put actual images in `public/projects/` and populate each project's `screenshots` array with `{ src, alt, caption }`. Use descriptive alt text and optimized WebP/AVIF files. The gallery is shown only when actual screenshots are available. Do not add private user data to screenshots.
+## Deployment
 
-## Deploy to Vercel
+This website is hosted on **Vercel** and connected to its GitHub repository.
 
-Import this folder/repository into Vercel using the Vite preset. The included `vercel.json` uses `npm run build`, serves `dist`, and supplies navigation fallback plus basic security headers. No environment variables or backend are needed. Set a custom domain in Vercel if desired. Add canonical URLs and a sitemap only after the final public domain is chosen.
+Production builds are generated using:
 
-Contact uses `mailto:` and clipboard copy; no contact form or message backend is implied. The mobile navigation supports keyboard access and Escape to close. Motion honors reduced-motion settings. Generated covers are explicitly labeled. Empty screenshot galleries and undocumented testing sections are hidden; available testing methods retain their evidence notes.
+```bash
+npm run build
+```
 
-## Implementation references
+Vite outputs the production website to the `dist` directory.
 
-- https://tailwindcss.com/docs/installation/using-vite
-- https://motion.dev/docs/react-installation
-- https://reactrouter.com/start/declarative/installation
+Updates pushed to the connected production branch can trigger new Vercel deployments.
+
+**Live Website:** https://nethma.vercel.app/
+
+## Future Improvements
+
+- Add more authentic project screenshots and demonstrations
+- Expand verified technical case studies
+- Refine interactions and accessibility based on testing
+- Continue improving performance and mobile usability
+- Add new professional projects and experience over time
+
+## Contact
+
+**Nethma Samadhi**
+
+Software Engineering | Web Development | QA | SEO & Analytics
+
+- **Portfolio:** https://nethma.vercel.app/
+- **GitHub:** https://github.com/Samadhi66
+- **Email:** nethmasamadhi66@gmail.com
+
+Open to connecting about early-career opportunities, software projects and technology-related work.
+
+---
+
+© 2026 Nethma Samadhi. Personal Portfolio.
