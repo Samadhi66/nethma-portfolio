@@ -2,19 +2,30 @@ import { createServer } from 'vite';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { projects } from '../src/data/projects.js';
+import { pageMetadata, siteUrl } from '../src/data/seo.js';
 
-const server = await createServer({server: {middlewareMode: true}, appType: 'custom'});
-const escape = value => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;');
+const server = await createServer({server:{middlewareMode:true},appType:'custom'});
+const escape = value => value.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+const routes = ['/',...projects.map(project=>`/projects/${project.slug}`),'/404'];
 try {
   const {render} = await server.ssrLoadModule('/src/entry-server.jsx');
-  const template = await readFile('dist/index.html', 'utf8');
-  const pages = [{route: '/', title: 'Nethma Samadhi | Software, Web & Data'}, ...projects.map(project => ({route: `/projects/${project.slug}`, title: `${project.shortTitle} | Nethma Samadhi`, description: project.summary})), {route: '/404', title: 'Page not found | Nethma Samadhi'}];
-  for (const page of pages) {
-    let html = template.replace('<div id="root"></div>', `<div id="root" data-route="${page.route}">${render(page.route)}</div>`).replace(/<title>.*?<\/title>/, `<title>${escape(page.title)}</title>`).replace(/(<meta property="og:title" content=")[^"]*/, `$1${escape(page.title)}`);
-    if (page.description) html = html.replace(/(<meta name="description" content=")[^"]*/, `$1${escape(page.description)}`).replace(/(<meta property="og:description" content=")[^"]*/, `$1${escape(page.description)}`);
-    const destination = page.route === '/404' ? 'dist/404.html' : path.join('dist', page.route, 'index.html');
-    await mkdir(path.dirname(destination), {recursive: true});
-    await writeFile(destination, html);
+  const template = await readFile('dist/index.html','utf8');
+  for(const route of routes){
+    const metadata = pageMetadata(route);
+    let html = template.replace('<div id="root"></div>',`<div id="root" data-route="${route}">${render(route)}</div>`)
+      .replace(/<title>.*?<\/title>/,`<title>${escape(metadata.title)}</title>`)
+      .replace(/(<link rel="canonical" href=")[^"]*/,`$1${metadata.canonical}`)
+      .replace(/(<script id="page-schema" type="application\/ld\+json">).*?(<\/script>)/,`$1${JSON.stringify(metadata.schema).replaceAll('<','\\u003c')}$2`);
+    for(const [attribute,name,value] of [
+      ['name','description',metadata.description],['name','robots',metadata.robots],
+      ['property','og:title',metadata.title],['property','og:description',metadata.description],['property','og:url',metadata.canonical],
+      ['name','twitter:title',metadata.title],['name','twitter:description',metadata.description],
+    ])html=html.replace(new RegExp(`(<meta ${attribute}="${name}" content=")[^"]*`),`$1${escape(value)}`);
+    const destination=route==='/404'?'dist/404.html':path.join('dist',route,'index.html');
+    await mkdir(path.dirname(destination),{recursive:true});await writeFile(destination,html);
   }
-  console.log(`Prerendered ${pages.length} pages with route-specific metadata.`);
+  await writeFile('dist/robots.txt',`User-agent: *\nAllow: /\nSitemap: ${siteUrl}/sitemap.xml\n`);
+  const urls=routes.filter(route=>route!=='/404').map(route=>`  <url><loc>${siteUrl}${route}</loc></url>`).join('\n');
+  await writeFile('dist/sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
+  console.log(`Prerendered ${routes.length} pages; generated robots.txt and sitemap.xml.`);
 } finally {await server.close();}

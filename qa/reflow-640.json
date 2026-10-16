@@ -1,0 +1,38 @@
+[
+  {
+    "client": 625,
+    "scroll": 625,
+    "url": "/",
+    "width": 640
+  },
+  {
+    "client": 625,
+    "scroll": 625,
+    "url": "/projects/finai",
+    "width": 640
+  },
+  {
+    "client": 625,
+    "scroll": 625,
+    "url": "/projects/ayurvedic-medicine",
+    "width": 640
+  },
+  {
+    "client": 625,
+    "scroll": 625,
+    "url": "/projects/library-management",
+    "width": 640
+  },
+  {
+    "client": 625,
+    "scroll": 625,
+    "url": "/projects/cleaning-service",
+    "width": 640
+  },
+  {
+    "client": 625,
+    "scroll": 625,
+    "url": "/missing-v2-check",
+    "width": 640
+  }
+]

@@ -1,10 +1,10 @@
-# Generated project artwork
+# Original project artwork (archived; not published)
 
 Generated with the built-in image generation tool. These are thematic concept images, not application screenshots. Originals are retained in Codex generated_images.
 
 ## finai
 
-Saved asset: public/projects/finai-concept.png
+Archived original: artwork-originals/finai-concept.png
 
 Prompt:
 
@@ -12,7 +12,7 @@ Use case: product-mockup. Asset type: landscape 3:2 editorial project cover for 
 
 ## ayurvedic-medicine
 
-Saved asset: public/projects/ayurvedic-medicine-concept.png
+Archived original: artwork-originals/ayurvedic-medicine-concept.png
 
 Prompt:
 
@@ -20,7 +20,7 @@ Use case: product-mockup. Asset type: landscape 3:2 editorial project cover for 
 
 ## library-management
 
-Saved asset: public/projects/library-management-concept.png
+Archived original: artwork-originals/library-management-concept.png
 
 Prompt:
 
@@ -28,7 +28,7 @@ Use case: product-mockup. Asset type: landscape 3:2 editorial project cover for 
 
 ## cleaning-service
 
-Saved asset: public/projects/cleaning-service-concept.png
+Archived original: artwork-originals/cleaning-service-concept.png
 
 Prompt:
 

@@ -1,29 +1,55 @@
-# Nethma Samadhi — Midnight & Mint
+# Nethma Samadhi — Portfolio V2
 
-A responsive React portfolio based on the supplied CV. Built with React 19, Vite 6, Tailwind CSS 4, React Router 7, Motion and Lucide React. Fonts are bundled locally: Manrope, Inter and JetBrains Mono.
+A CV-backed portfolio built with React 19, Vite 6, React Router 7, Motion and Lucide. The Midnight & Mint design uses self-hosted Manrope, Inter and JetBrains Mono fonts. There is no application backend or external tracking script.
 
-## Run locally
+## Local development and verification
 
-Requires Node.js 22 or newer (validated with Node 24).
+Use Node 24.15+ (or Node 22.22.2+); the test DOM dependency has a newer Node requirement than Vite itself.
 
 ```powershell
 cd "E:\GitHub-Projects\nethma-portfolio"
 npm ci
-npm run dev
-```
-
-Open the local URL printed by Vite, normally http://127.0.0.1:5173.
-
-```powershell
 npm run lint
 npm run build
 npm test
-npm run preview
+npm run preview -- --port 4173
 ```
 
-The build prerenders the homepage, all four case studies and a 404 page, including route-specific titles and descriptions. React hydrates the HTML for client-side navigation. `dist/` is generated output. Run tests after building.
+In a second terminal:
 
-## Routes
+```powershell
+node scripts/check-preview.mjs http://127.0.0.1:4173
+```
+
+`npm run dev` starts the development server on port 5173. Stop running project servers before `npm ci` on Windows so native build modules are not locked. `npm test` includes DOM interaction, accessibility, content, metadata, local-link and deployment-configuration tests. Run a build before tests because some assertions inspect the actual generated output.
+
+## Architecture
+
+- `src/data/profile.js`: professional identity, verified social URLs, skills, responsibilities and education.
+- `src/data/projects.js`: all four projects, problem statements, architecture/workflow descriptions, features, contributions and validation evidence.
+- `src/data/seo.js`: production domain and shared page metadata/structured data.
+- `src/pages/Home.jsx`: hero, editorial project sequence, experience, expertise and education.
+- `src/pages/Project.jsx`: reusable case-study sections, visual disclosures, validation, next-project navigation and 404 view.
+- `src/components/Layout.jsx`: responsive navigation, focus behavior, contact/clipboard and footer.
+- `src/components/UI.jsx` and `PageMotion.jsx`: reusable visuals and restrained, reduced-motion-aware interaction.
+- `src/styles.css`: the consolidated design system. The former override stylesheet and unused Tailwind integration have been removed.
+- `scripts/prerender.mjs`: renders all five public routes plus a noindex 404 document; generates robots.txt and sitemap.xml.
+- `tests/`: static output and React DOM interaction/accessibility tests.
+- `qa/responsive-results.json`: measured browser overflow/image checks for 60 page/viewport combinations.
+
+## Content and images
+
+The existing portrait is preserved and compressed into responsive WebP variants. Original assets are retained in `artwork-originals/`, outside the published `public/` directory. The JPEG social image derives from the same approved portrait.
+
+Project images remain clearly labeled **AI-generated interface concepts**, not implementation screenshots. The existing prompt set is in `PROJECT-INTERFACE-ARTWORK.md`. No new face or project metrics have been generated.
+
+To add authentic screenshots, place optimized images in `public/projects/` and populate the appropriate `screenshots` array with `{src, alt, caption, width, height}`. The cover automatically prefers the first real screenshot and the case-study gallery appears only when images exist.
+
+The downloadable `public/Nethma-Samadhi-CV.pdf` is the existing public CV, excluding private phone, home address and references. Its source generation script is optional and is not part of the website build. Keep the supplied private original out of `public/`.
+
+## Routes and Vercel
+
+The public domain remains **https://nethma.vercel.app/**.
 
 - `/`
 - `/projects/finai`
@@ -31,31 +57,8 @@ The build prerenders the homepage, all four case studies and a 404 page, includi
 - `/projects/library-management`
 - `/projects/cleaning-service`
 
-## Edit content
+The build writes crawlable HTML for every route. Vercel uses `npm run build`, the Vite preset and `dist/`. Explicit case-study rewrites are retained. The previous homepage catch-all is removed so unmatched URLs use the generated `404.html` with HTTP 404. The local production preview models that behavior. Security headers are retained; no DNS, production project or audience settings are changed.
 
-- `src/data/profile.js`: identity, verified social links, experience, expertise and education.
-- `src/data/projects.js`: verified project descriptions, technologies, contributions and testing information.
-- `src/components/`: reusable navigation, contact, footer, tags, reveal and screenshot components.
-- `src/pages/`: homepage and case studies.
-- `src/styles.css`: Midnight & Mint design and responsive layout; Tailwind theme tokens.
-- `public/Nethma-Samadhi-CV.pdf`: reformatted public CV excluding home address, phone number and references. The original supplied PDF is unchanged and is not included in the public build.
-- `scripts/create-public-cv.py`: optional PDF regeneration using Python and ReportLab; not required for the website build.
+When adding a project, update `vercel.json` along with the project data. Tests check that every case-study rewrite has a generated page. Keep production changes on a review branch until the PR has been reviewed.
 
-
-## Project evidence still needed
-
-Project covers are AI-generated interface concepts. The full prompt set and asset paths are documented in `PROJECT-INTERFACE-ARTWORK.md`. Responsive WebP variants replace the larger PNG covers in the UI. Three project repository links were supplied by the owner. Actual application screenshots, live demos, model scores and formal test reports are still needed. The site does not invent these. LinkedIn and GitHub profile links were extracted from the CV's hyperlink annotations.
-
-To add screenshots, put actual images in `public/projects/` and populate each project's `screenshots` array with `{ src, alt, caption }`. Use descriptive alt text and optimized WebP/AVIF files. The gallery is shown only when actual screenshots are available. Do not add private user data to screenshots.
-
-## Deploy to Vercel
-
-Import this folder/repository into Vercel using the Vite preset. The included `vercel.json` uses `npm run build`, serves `dist`, and supplies navigation fallback plus basic security headers. No environment variables or backend are needed. Set a custom domain in Vercel if desired. Add canonical URLs and a sitemap only after the final public domain is chosen.
-
-Contact uses `mailto:` and clipboard copy; no contact form or message backend is implied. The mobile navigation supports keyboard access and Escape to close. Motion honors reduced-motion settings. Generated covers are explicitly labeled. Empty screenshot galleries and undocumented testing sections are hidden; available testing methods retain their evidence notes.
-
-## Implementation references
-
-- https://tailwindcss.com/docs/installation/using-vite
-- https://motion.dev/docs/react-installation
-- https://reactrouter.com/start/declarative/installation
+For the full audit, QA coverage, measured sizes, known limitations and post-deployment checks, see `AUDIT-V2.md` and `QA-V2.md`.
