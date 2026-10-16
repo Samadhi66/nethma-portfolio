@@ -1,13 +1,93 @@
-# Nethma Samadhi — Portfolio V2
+# Nethma Samadhi — Personal Portfolio
 
-A CV-backed portfolio built with React 19, Vite 6, React Router 7, Motion and Lucide. The Midnight & Mint design uses self-hosted Manrope, Inter and JetBrains Mono fonts. There is no application backend or external tracking script.
+**Software Development · Quality Assurance · Web & SEO · Data Analysis**
 
-## Local development and verification
+A modern, responsive personal portfolio presenting my technical background, professional experience, academic projects and interests across software engineering and digital technologies.
 
-Use Node 24.15+ (or Node 22.22.2+); the test DOM dependency has a newer Node requirement than Vite itself.
+Designed with a **Midnight & Mint** visual identity, focusing on clean typography, intuitive navigation, accessibility and a consistent user experience.
 
-```powershell
-cd "E:\GitHub-Projects\nethma-portfolio"
+**[View Live Portfolio](https://nethma.vercel.app/)** · **[GitHub Profile](https://github.com/Samadhi66)** · **[Contact Me](mailto:nethmasamadhi66@gmail.com)**
+
+---
+
+## About Me
+
+I'm Nethma Samadhi, a Software Engineering undergraduate at ICBT Campus, with my academic studies completed and graduation pending.
+
+I have hands-on experience developing full-stack web applications, mobile applications and data-driven solutions. I currently work as a Web Content & SEO Assistant at eBEYONDS, where I contribute to website content management, on-page optimization and digital workflows.
+
+My interests span software and web development, software quality, technical analysis, data-driven applications and digital operations.
+
+## Portfolio Features
+
+- Modern Midnight & Mint visual design
+- Responsive layouts for desktop, tablet and mobile
+- Professional introduction and downloadable CV
+- Featured software projects with individual case-study pages
+- Professional experience and technical expertise sections
+- Education and background information
+- Contact options and professional profile links
+- Accessible navigation and reduced-motion support
+- SEO-oriented page metadata and route-specific content
+
+## Featured Projects
+
+### 01. FinAI — AI-Powered Financial Intelligence System
+
+A full-stack financial application integrating transaction management, interactive financial dashboards and machine-learning functionality.
+
+**Key features:** Transaction CRUD, spending insights, budget and transaction-amount prediction, behavioral fraud detection, receipt extraction and voice-assisted expense entry.
+
+**Technologies:** React, Vite, Python, FastAPI, SQLite, Scikit-learn, EasyOCR and Browser Speech API.
+
+### 02. Ayurvedic Medicine Management System
+
+A database-driven application designed to support medicine inventory, order management, record tracking and reporting.
+
+**Technologies:** PHP and MySQL.
+
+### 03. Library Management Website
+
+A web application supporting book cataloguing, member management and library-related workflows.
+
+**Technologies:** HTML, CSS, JavaScript and PHP.
+
+### 04. Cleaning Service Mobile App
+
+A mobile application featuring user registration, service booking and appointment scheduling.
+
+**Development environment:** Android Studio.
+
+Each project is presented through an individual case study detailing its purpose, functionality, technologies and verified implementation information.
+
+## Portfolio Technology Stack
+
+| Category | Technologies |
+|---|---|
+| Frontend | React 19, JavaScript, HTML5, CSS3 |
+| Build Tool | Vite 6 |
+| Styling | Tailwind CSS 4, custom CSS |
+| Routing | React Router 7 |
+| Animation | Motion |
+| Icons | Lucide React |
+| Fonts | Manrope, Inter, JetBrains Mono |
+| Deployment | Vercel |
+| Version Control | Git and GitHub |
+
+## Getting Started
+
+To run the portfolio locally, use Node.js 22 or newer.
+
+**1. Clone the repository**
+
+```bash
+git clone https://github.com/Samadhi66/nethma-portfolio.git
+cd nethma-portfolio
+```
+
+**2. Install dependencies**
+
+```bash
 npm ci
 npm run lint
 npm run build
