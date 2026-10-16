@@ -60,8 +60,10 @@ test('global section navigation works from a case study, including Contact',asyn
 test('mobile disclosure focuses first link; Escape closes and restores toggle focus',async()=>{
   const user=userEvent.setup({document});
   mount('/');
+  await waitFor(()=>assert.equal(document.activeElement.id,'main'));
   const toggle=screen.getByRole('button',{name:'Open navigation'});
-  await user.click(toggle);
+  toggle.focus();
+  await user.keyboard('{Enter}');
   const mobile=screen.getByRole('navigation',{name:'Mobile navigation'});
   assert.equal(toggle.getAttribute('aria-expanded'),'true');
   assert.equal(document.activeElement,mobile.querySelector('a'));
@@ -69,7 +71,7 @@ test('mobile disclosure focuses first link; Escape closes and restores toggle fo
   assert.equal(toggle.getAttribute('aria-expanded'),'false');
   assert.equal(document.activeElement,toggle);
 });
-test('mobile navigation closes on link selection and on focus leaving the header',async()=>{
+test('mobile navigation closes on selection and outside pointer without stealing tap focus',async()=>{
   const user=userEvent.setup({document});mount('/');
   await user.click(screen.getByRole('button',{name:'Open navigation'}));
   const mobile=screen.getByRole('navigation',{name:'Mobile navigation'});
@@ -77,8 +79,31 @@ test('mobile navigation closes on link selection and on focus leaving the header
   await waitFor(()=>assert.equal(document.activeElement.id,'expertise'));
   assert.equal(mobile.hidden,true);
   await user.click(screen.getByRole('button',{name:'Open navigation'}));
-  fireEvent.blur(document.activeElement,{relatedTarget:document.getElementById('main')});
+  assert.notEqual(document.activeElement,mobile.querySelector('a'));
+  fireEvent.pointerDown(document.getElementById('main'),{pointerType:'touch'});
   await waitFor(()=>assert.equal(mobile.hidden,true));
+});
+
+test('touch focus changes cannot dismiss the menu before a link or toggle click',async()=>{
+  mount('/');
+  await waitFor(()=>assert.equal(document.activeElement.id,'main'));
+  const toggle=screen.getByRole('button',{name:'Open navigation'});
+  for (const relatedTarget of [null,document.body,document.getElementById('main')]) {
+    fireEvent.click(toggle,{detail:1});
+    const mobile=screen.getByRole('navigation',{name:'Mobile navigation'});
+    fireEvent.blur(toggle,{relatedTarget});
+    assert.equal(mobile.hidden,false);
+    const contact=[...mobile.querySelectorAll('a')].find(a=>a.textContent==='Contact');
+    fireEvent.pointerDown(contact,{pointerType:'touch'});
+    assert.equal(mobile.hidden,false);
+    fireEvent.click(contact,{detail:1});
+    await waitFor(()=>assert.equal(document.activeElement.id,'contact'));
+    assert.equal(mobile.hidden,true);
+  }
+  fireEvent.click(toggle,{detail:1});
+  fireEvent.blur(toggle,{relatedTarget:document.body});
+  fireEvent.click(toggle,{detail:1});
+  assert.equal(toggle.getAttribute('aria-expanded'),'false');
 });
 test('copy email writes the address and announces accessible success',async()=>{
   mount('/');let copied;
@@ -88,6 +113,7 @@ test('copy email writes the address and announces accessible success',async()=>{
   await waitFor(()=>assert.equal(screen.getByRole('status').textContent,'Email address copied.'));
   assert.equal(copied,profile.email);
   assert.equal(screen.getByRole('link',{name:profile.email}).href,`mailto:${profile.email}`);
+  assert.equal(screen.getByRole('link',{name:'077 056 9658'}).getAttribute('href'),'tel:+94770569658');
 });
 test('clipboard denial gives a usable selection fallback without false success',async()=>{
   mount('/');Object.defineProperty(navigator,'clipboard',{value:{writeText:async()=>{throw Error('denied');}},configurable:true});

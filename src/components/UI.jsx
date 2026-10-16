@@ -3,7 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 
 export function Reveal({children, className = '', delay = 0}) {
   const reduced = useReducedMotion();
-  return <Motion.div initial={false} whileInView={reduced ? {} : {y: [12, 0]}} viewport={{once: true, amount: 0.12}} transition={{duration: 0.45, delay, ease: [0.22, 1, 0.36, 1]}} className={className}>{children}</Motion.div>;
+  return <Motion.div initial={false} whileInView={reduced ? {} : {y: [18, 0], opacity: [.65, 1]}} viewport={{once: true, amount: 0.12}} transition={{duration: 0.6, delay, ease: [0.22, 1, 0.36, 1]}} className={className}>{children}</Motion.div>;
 }
 export function SectionHeading({id, number, label, title, children}) {
   return <Reveal className="section-heading"><div><p className="eyebrow"><span>{number}</span> / {label}</p><h2 id={id}>{title}</h2></div>{children && <p className="section-aside">{children}</p>}</Reveal>;

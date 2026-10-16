@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
-import { ArrowUpRight, ArrowUp, Menu, X, Download, Copy, Check } from 'lucide-react';
+import { ArrowUpRight, ArrowUp, Menu, X, Download, Copy, Check, Phone } from 'lucide-react';
 import { profile } from '../data/profile';
 import { ExternalLink } from './UI';
 
@@ -11,6 +11,7 @@ export function Navigation() {
   const [active,setActive] = useState('');
   const toggle = useRef(null);
   const menu = useRef(null);
+  const keyboardOpen = useRef(false);
   useEffect(()=>{
     setOpen(false);
     if (location.pathname !== '/') {setActive('');return;}
@@ -27,22 +28,24 @@ export function Navigation() {
   },[location]);
   useEffect(()=>{
     if (!open) return;
-    menu.current?.querySelector('a')?.focus();
+    if (keyboardOpen.current) menu.current?.querySelector('a')?.focus({preventScroll:true});
     const onKey=event=>{if(event.key==='Escape'){setOpen(false);toggle.current?.focus();}};
     const onPointer=event=>{if(!menu.current?.contains(event.target)&&!toggle.current?.contains(event.target))setOpen(false);};
     const media=window.matchMedia('(min-width: 801px)');
     const onResize=()=>{if(media.matches)setOpen(false);};
-    document.addEventListener('keydown',onKey);document.addEventListener('pointerdown',onPointer);media.addEventListener('change',onResize);
-    return ()=>{document.removeEventListener('keydown',onKey);document.removeEventListener('pointerdown',onPointer);media.removeEventListener('change',onResize);};
+    document.addEventListener('keydown',onKey);document.addEventListener('pointerdown',onPointer,true);media.addEventListener('change',onResize);
+    return ()=>{document.removeEventListener('keydown',onKey);document.removeEventListener('pointerdown',onPointer,true);media.removeEventListener('change',onResize);};
   },[open]);
   const navLink=([label,id])=><Link key={id} to={`/#${id}`} className={active===id?'is-active':undefined} aria-current={active===id?'location':undefined} onClick={()=>setOpen(false)}>{label}</Link>;
-  return <header className="site-header" onBlur={event=>{if(open&&!event.currentTarget.contains(event.relatedTarget))setOpen(false);}}>
+  // Touch browsers can move focus outside before firing a link's click. Blur must
+  // never unmount the tap target; close on selection, outside pointer or Escape.
+  return <header className="site-header">
     <div className="container header-inner"><Link to="/" aria-label="Nethma Samadhi home" className="wordmark"><span className="brand-monogram" aria-hidden="true">ns<span>.</span></span><span>nethma<span className="wordmark-surname"> samadhi</span></span></Link>
       <nav className="desktop-nav" aria-label="Primary navigation">{links.map(navLink)}</nav>
       <a className="header-cv" href={profile.cv} download>CV<Download size={17} aria-hidden="true"/></a>
-      <button ref={toggle} type="button" className="menu-toggle" aria-label={open?'Close navigation':'Open navigation'} aria-expanded={open} aria-controls="mobile-nav" onClick={()=>setOpen(value=>!value)}>{open?<X size={23} aria-hidden="true"/>:<Menu size={23} aria-hidden="true"/>}</button>
+      <button ref={toggle} type="button" className="menu-toggle" aria-label={open?'Close navigation':'Open navigation'} aria-expanded={open} aria-controls="mobile-nav" onClick={event=>{keyboardOpen.current=event.detail===0;setOpen(value=>!value);}}>{open?<X size={23} aria-hidden="true"/>:<Menu size={23} aria-hidden="true"/>}</button>
     </div>
-    <nav ref={menu} id="mobile-nav" className="mobile-nav" aria-label="Mobile navigation" hidden={!open}>{links.map(navLink)}<a href={profile.cv} download>Download CV<Download size={17} aria-hidden="true"/></a></nav>
+    <nav ref={menu} id="mobile-nav" className="mobile-nav" aria-label="Mobile navigation" hidden={!open}>{links.map(navLink)}<a href={profile.cv} download onClick={()=>setOpen(false)}>Download CV<Download size={17} aria-hidden="true"/></a></nav>
   </header>;
 }
 export function Contact() {
@@ -65,6 +68,7 @@ export function Contact() {
   return <section id="contact" tabIndex={-1} aria-labelledby="contact-title" className="contact-section"><div className="container"><p className="eyebrow"><span className="status-dot"/> LET’S CONNECT</p>
     <div className="contact-heading"><h2 id="contact-title">Have an opportunity<br/><span className="text-mint">in mind?</span></h2><a className="contact-arrow" href={`mailto:${profile.email}`} aria-label="Email Nethma Samadhi"><ArrowUpRight strokeWidth={1.2} size={60} aria-hidden="true"/></a></div>
     <div className="contact-bottom"><p>I’m interested in early-career opportunities across software and web development, QA, technical analysis and digital operations.</p><div className="email-block"><a ref={email} className="email-link" href={`mailto:${profile.email}`}>{profile.email}</a><button type="button" onClick={copyEmail} className="copy-button">{copied?<Check size={16} aria-hidden="true"/>:<Copy size={16} aria-hidden="true"/>}{copied?'Copied':'Copy email address'}</button><span className="copy-status" role="status" aria-atomic="true">{message}</span></div></div>
+    <a className="phone-link" href={profile.phone.href}><Phone size={18} aria-hidden="true"/>{profile.phone.display}</a>
     <div className="social-row"><span className="mono">FIND ME ELSEWHERE</span><ExternalLink href={profile.social.linkedin}>LinkedIn</ExternalLink><ExternalLink href={profile.social.github}>GitHub</ExternalLink><a href={profile.cv} download>Download CV<Download size={17} aria-hidden="true"/></a></div>
   </div></section>;
 }
