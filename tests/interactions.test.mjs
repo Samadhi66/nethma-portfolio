@@ -80,6 +80,24 @@ test('mobile navigation closes on link selection and on focus leaving the header
   fireEvent.blur(document.activeElement,{relatedTarget:document.getElementById('main')});
   await waitFor(()=>assert.equal(mobile.hidden,true));
 });
+test('touch blur without a focus destination does not swallow menu taps',async()=>{
+  mount('/');
+  await waitFor(()=>assert.equal(document.activeElement.id,'main'));
+  const toggle=screen.getByRole('button',{name:'Open navigation'});
+  fireEvent.click(toggle);
+  const mobile=screen.getByRole('navigation',{name:'Mobile navigation'});
+  // Mobile browsers can blur the focused link before dispatching the tap click.
+  fireEvent.blur(mobile.querySelector('a'),{relatedTarget:null});
+  assert.equal(mobile.hidden,false);
+  fireEvent.click([...mobile.querySelectorAll('a')].find(a=>a.textContent==='Contact'));
+  await waitFor(()=>assert.equal(document.activeElement.id,'contact'));
+  assert.equal(mobile.hidden,true);
+  fireEvent.click(toggle);
+  fireEvent.blur(mobile.querySelector('a'),{relatedTarget:null});
+  fireEvent.click(toggle);
+  assert.equal(mobile.hidden,true);
+});
+
 test('copy email writes the address and announces accessible success',async()=>{
   mount('/');let copied;
   Object.defineProperty(navigator,'clipboard',{value:{writeText:async text=>{copied=text;}},configurable:true});
@@ -88,6 +106,7 @@ test('copy email writes the address and announces accessible success',async()=>{
   await waitFor(()=>assert.equal(screen.getByRole('status').textContent,'Email address copied.'));
   assert.equal(copied,profile.email);
   assert.equal(screen.getByRole('link',{name:profile.email}).href,`mailto:${profile.email}`);
+  assert.equal(screen.getByRole('link',{name:'077 056 9658'}).getAttribute('href'),'tel:+94770569658');
 });
 test('clipboard denial gives a usable selection fallback without false success',async()=>{
   mount('/');Object.defineProperty(navigator,'clipboard',{value:{writeText:async()=>{throw Error('denied');}},configurable:true});

@@ -149,6 +149,8 @@ svg { flex-shrink:0; vertical-align:middle; }
 .contact-bottom>p { max-width:460px; color:var(--muted); font-size:15px; }
 .email-link { display:inline-block; font-size:clamp(16px,1.7vw,23px); border-bottom:1px solid #6c8b77; padding-block:0 10px; overflow-wrap:anywhere; }
 .email-link:hover { color:var(--mint); }
+.phone-link { display:flex; align-items:center; gap:12px; width:fit-content; min-height:44px; color:var(--mint); font-size:20px; }
+.phone-link:hover { text-decoration:underline; text-underline-offset:5px; }
 .copy-button { display:flex; align-items:center; gap:9px; background:transparent; border:0; color:var(--muted); font-size:13px; padding:0; min-height:44px; }
 .copy-button:hover { color:var(--mint); }
 .copy-status { display:block; font-size:13px; line-height:1.6; color:var(--mint); min-height:42px; max-width:400px; }

@@ -31,10 +31,10 @@ test('all four case-study routes have unique metadata and real content', async (
     assert.ok(!html.includes('Download demo'));
   }
 });
-test('public pages exclude private phone, home address and references', async () => {
+test('public pages exclude home address and references', async () => {
   for(const file of ['dist/index.html',...projects.map(project=>`dist/projects/${project.slug}/index.html`)]){
     const html = await readFile(file,'utf8');
-    assert.doesNotMatch(html,/0770569658|770569658|Samadhi Sewana|Naran Aththeyaya|Induranga De Silva|Sandaruwani Kulathunga|tel:/i);
+    assert.doesNotMatch(html,/Samadhi Sewana|Naran Aththeyaya|Induranga De Silva|Sandaruwani Kulathunga/i);
   }
   await access('dist/Nethma-Samadhi-CV.pdf');
 });

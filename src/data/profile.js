@@ -1,6 +1,7 @@
 export const profile = {
   name: 'Nethma Samadhi',
   email: 'nethmasamadhi66@gmail.com',
+  phone: {display: '077 056 9658', href: 'tel:+94770569658'},
   headline: "Hi, I'm Nethma Samadhi.",
   subtitle: 'I build practical digital solutions, from full-stack applications to better web experiences.',
   description: "I'm a Software Engineering undergraduate at ICBT Campus, with my academic studies completed and graduation pending. Alongside developing web, mobile and data-driven applications, I work as a Web Content & SEO Assistant at eBEYONDS, contributing to website content, optimization and digital workflows.",
