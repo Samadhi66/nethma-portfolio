@@ -2,14 +2,11 @@ import React from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
 import '@fontsource/manrope/latin-400.css';
-import '@fontsource/manrope/latin-500.css';
 import '@fontsource/manrope/latin-600.css';
-import '@fontsource/manrope/latin-700.css';
 import '@fontsource/inter/latin-400.css';
 import '@fontsource/inter/latin-500.css';
 import '@fontsource/jetbrains-mono/latin-400.css';
 import './styles.css';
-import './redesign.css';
 import App from './App';
 
 const root = document.getElementById('root');

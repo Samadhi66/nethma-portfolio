@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { motion as Motion, useScroll, useSpring, useReducedMotion } from 'motion/react';
+import { m as Motion, useScroll, useSpring, useReducedMotion } from 'motion/react';
 import { useLocation } from 'react-router';
 
 export function ScrollProgress() {
@@ -16,7 +16,7 @@ export function PageEntrance({children}) {
   const ref = useRef(null);
   useEffect(() => {
     if (reduced || !ref.current?.animate) return;
-    const animation = ref.current.animate([{opacity: 0.45, transform: 'translateY(14px)'}, {opacity: 1, transform: 'translateY(0)'}], {duration: 500, easing: 'cubic-bezier(.22,1,.36,1)'});
+    const animation = ref.current.animate([{transform: 'translateY(8px)'}, {transform: 'translateY(0)'}], {duration: 300, easing: 'cubic-bezier(.22,1,.36,1)'});
     return () => animation.cancel();
   }, [pathname, reduced]);
   return <div ref={ref} className="page-entrance">{children}</div>;

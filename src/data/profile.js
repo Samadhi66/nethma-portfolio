@@ -9,10 +9,10 @@ export const profile = {
   cv: '/Nethma-Samadhi-CV.pdf',
 };
 export const expertise = [
-  {title: 'Software & Web Development', description: 'Connecting interfaces, application logic and persistent data.', skills: ['HTML', 'CSS', 'JavaScript', 'React', 'Vite', 'Bootstrap', 'Python', 'Java', 'PHP', 'FastAPI', 'REST APIs', 'Git & GitHub', 'Android Studio']},
+  {title: 'Development', description: 'Connecting interfaces, application logic and persistent data.', skills: ['HTML', 'CSS', 'JavaScript', 'React', 'Vite', 'Bootstrap', 'Python', 'Java', 'PHP', 'FastAPI', 'REST APIs', 'MySQL', 'SQLite', 'Git & GitHub', 'Android Studio']},
   {title: 'QA & Software Validation', description: 'Checking how forms and workflows behave, with attention to the details.', skills: ['Manual form testing', 'Input validation', 'Duplicate detection', 'Application interaction testing']},
-  {title: 'Data, Dashboards & Analysis', description: 'Organizing records and exploring what data can tell us.', skills: ['MySQL', 'SQLite', 'JSON', 'Scikit-learn', 'EasyOCR', 'Dashboards', 'Reporting', 'Model evaluation', 'Excel']},
-  {title: 'Web Content, SEO & Analytics', description: 'Supporting clear content and better-maintained web experiences.', skills: ['WordPress', 'Keyword research', 'Copy optimization', '301 redirects', 'Image alt attributes', 'Google Analytics', 'Google Tag Manager', 'Canva']},
+  {title: 'Data & Analysis', description: 'Organizing records and exploring what data can tell us.', skills: ['Financial dashboards', 'Reporting', 'Scikit-learn', 'EasyOCR', 'Model evaluation', 'Excel', 'JSON']},
+  {title: 'Web & SEO', description: 'Supporting clear content and better-maintained web experiences.', skills: ['WordPress', 'Keyword research', 'Content optimization', '301 redirects', 'Image alt attributes', 'Google Analytics', 'Google Tag Manager', 'Canva']},
 ];
 export const experience = [
   {title: 'Content & search', text: 'Conduct keyword research and optimize website copy for keyword relevance, readability and consistency.'},

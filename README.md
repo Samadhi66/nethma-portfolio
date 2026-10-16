@@ -89,98 +89,56 @@ cd nethma-portfolio
 
 ```bash
 npm ci
-```
-
-**3. Start the development server**
-
-```bash
-npm run dev
-```
-
-Open the local address displayed by Vite.
-
-### Available Commands
-
-```bash
-npm run dev
 npm run lint
 npm run build
 npm test
-npm run preview
+npm run preview -- --port 4173
 ```
 
-These commands support local development, code-quality checks, production builds, automated tests and build previews.
+In a second terminal:
 
-## Project Structure
-
-```text
-nethma-portfolio/
-├── public/             # Public assets and downloadable CV
-├── scripts/            # Supporting build and content scripts
-├── src/
-│   ├── components/     # Reusable interface components
-│   ├── data/           # Profile and project information
-│   ├── pages/          # Homepage and project case studies
-│   └── styles.css      # Visual styling and responsive layout
-├── tests/              # Automated tests
-├── index.html
-├── package.json
-├── vite.config.js
-└── vercel.json
+```powershell
+node scripts/check-preview.mjs http://127.0.0.1:4173
 ```
 
-## Design Philosophy
+`npm run dev` starts the development server on port 5173. Stop running project servers before `npm ci` on Windows so native build modules are not locked. `npm test` includes DOM interaction, accessibility, content, metadata, local-link and deployment-configuration tests. Run a build before tests because some assertions inspect the actual generated output.
 
-The portfolio follows a minimal, editorial approach that prioritizes content and usability.
+## Architecture
 
-Its Midnight & Mint design emphasizes:
+- `src/data/profile.js`: professional identity, verified social URLs, skills, responsibilities and education.
+- `src/data/projects.js`: all four projects, problem statements, architecture/workflow descriptions, features, contributions and validation evidence.
+- `src/data/seo.js`: production domain and shared page metadata/structured data.
+- `src/pages/Home.jsx`: hero, editorial project sequence, experience, expertise and education.
+- `src/pages/Project.jsx`: reusable case-study sections, visual disclosures, validation, next-project navigation and 404 view.
+- `src/components/Layout.jsx`: responsive navigation, focus behavior, contact/clipboard and footer.
+- `src/components/UI.jsx` and `PageMotion.jsx`: reusable visuals and restrained, reduced-motion-aware interaction.
+- `src/styles.css`: the consolidated design system. The former override stylesheet and unused Tailwind integration have been removed.
+- `scripts/prerender.mjs`: renders all five public routes plus a noindex 404 document; generates robots.txt and sitemap.xml.
+- `tests/`: static output and React DOM interaction/accessibility tests.
+- `qa/responsive-results.json`: measured browser overflow/image checks for 60 page/viewport combinations.
 
-- Thoughtful typography and spacing
-- Restrained color and animation
-- Clear project storytelling
-- Responsive layouts
-- Accessible interactions
-- Consistent components
-- Practical, maintainable frontend development
+## Content and images
 
-Project interface concepts are identified as illustrative visuals where authentic application screenshots have not yet been added.
+The existing portrait is preserved and compressed into responsive WebP variants. Original assets are retained in `artwork-originals/`, outside the published `public/` directory. The JPEG social image derives from the same approved portrait.
 
-## Deployment
+Project images remain clearly labeled **AI-generated interface concepts**, not implementation screenshots. The existing prompt set is in `PROJECT-INTERFACE-ARTWORK.md`. No new face or project metrics have been generated.
 
-This website is hosted on **Vercel** and connected to its GitHub repository.
+To add authentic screenshots, place optimized images in `public/projects/` and populate the appropriate `screenshots` array with `{src, alt, caption, width, height}`. The cover automatically prefers the first real screenshot and the case-study gallery appears only when images exist.
 
-Production builds are generated using:
+The downloadable `public/Nethma-Samadhi-CV.pdf` is the existing public CV, excluding private phone, home address and references. Its source generation script is optional and is not part of the website build. Keep the supplied private original out of `public/`.
 
-```bash
-npm run build
-```
+## Routes and Vercel
 
-Vite outputs the production website to the `dist` directory.
+The public domain remains **https://nethma.vercel.app/**.
 
-Updates pushed to the connected production branch can trigger new Vercel deployments.
+- `/`
+- `/projects/finai`
+- `/projects/ayurvedic-medicine`
+- `/projects/library-management`
+- `/projects/cleaning-service`
 
-**Live Website:** https://nethma.vercel.app/
+The build writes crawlable HTML for every route. Vercel uses `npm run build`, the Vite preset and `dist/`. Explicit case-study rewrites are retained. The previous homepage catch-all is removed so unmatched URLs use the generated `404.html` with HTTP 404. The local production preview models that behavior. Security headers are retained; no DNS, production project or audience settings are changed.
 
-## Future Improvements
+When adding a project, update `vercel.json` along with the project data. Tests check that every case-study rewrite has a generated page. Keep production changes on a review branch until the PR has been reviewed.
 
-- Add more authentic project screenshots and demonstrations
-- Expand verified technical case studies
-- Refine interactions and accessibility based on testing
-- Continue improving performance and mobile usability
-- Add new professional projects and experience over time
-
-## Contact
-
-**Nethma Samadhi**
-
-Software Engineering | Web Development | QA | SEO & Analytics
-
-- **Portfolio:** https://nethma.vercel.app/
-- **GitHub:** https://github.com/Samadhi66
-- **Email:** nethmasamadhi66@gmail.com
-
-Open to connecting about early-career opportunities, software projects and technology-related work.
-
----
-
-© 2026 Nethma Samadhi. Personal Portfolio.
+For the full audit, QA coverage, measured sizes, known limitations and post-deployment checks, see `AUDIT-V2.md` and `QA-V2.md`.
