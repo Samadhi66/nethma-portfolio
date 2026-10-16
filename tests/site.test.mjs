@@ -18,9 +18,14 @@ test('all four case-study routes have unique metadata and real content', async (
     const html = await readFile(`dist/projects/${project.slug}/index.html`,'utf8');
     assert.ok(html.includes(`<title>${project.shortTitle} | Nethma Samadhi</title>`));
     assert.ok(html.includes(`data-route="/projects/${project.slug}"`));
-    for(const id of ['overview','features','contributions','testing','screenshots']) assert.ok(html.includes(`id="${id}"`));
+    for(const id of ['overview','features','contributions']) assert.ok(html.includes(`id="${id}"`));
     assert.ok(html.includes(project.overview));
-    assert.ok(html.includes('SCREENSHOT PLACEHOLDER'));
+    assert.ok(!html.includes('SCREENSHOT PLACEHOLDER'));
+    assert.equal(html.includes('id="screenshots"'), project.screenshots.length > 0);
+    assert.equal(html.includes('id="testing"'), project.testing.length > 0);
+    assert.ok(html.includes('AI-generated interface concept'));
+    await access(`dist${project.cover.src}`);
+    await access(`dist/projects/${project.slug}-interface-768.webp`);
     assert.ok(!html.includes('Download demo'));
   }
 });

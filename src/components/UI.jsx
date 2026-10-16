@@ -9,9 +9,9 @@ export function SectionHeading({number, label, title, children}) {
   return <Reveal className="section-heading"><div><p className="eyebrow"><span>{number}</span> / {label}</p><h2>{title}</h2></div>{children && <p className="section-aside">{children}</p>}</Reveal>;
 }
 export function Tags({items}) {return <ul className="tags" aria-label="Technologies">{items.map(item => <li key={item}>{item}</li>)}</ul>;}
-export function ProjectCover({project, compact = false}) {
+export function ProjectCover({project, compact = false, priority = false}) {
   if (!project.cover) return <Screenshot project={project} compact={compact}/>;
-  return <figure className={`project-cover ${compact ? 'compact-cover' : ''}`}><img src={project.cover.src} alt={project.cover.alt} width="1536" height="1024" loading="lazy" decoding="async"/><figcaption>AI-generated concept artwork · Not an application screenshot</figcaption></figure>;
+  return <figure className={`project-cover ${compact ? 'compact-cover' : ''}`}><img src={project.cover.src} srcSet={project.cover.srcSet} sizes={compact ? '(max-width: 700px) calc(100vw - 46px), (max-width: 1320px) 45vw, 577px' : '(max-width: 700px) calc(100vw - 46px), (max-width: 1320px) 90vw, 1192px'} alt={project.cover.alt} width="1536" height="1024" loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : undefined} decoding="async"/><figcaption>AI-generated interface concept · Illustrative preview</figcaption></figure>;
 }
 export function Screenshot({project, index = 0, compact = false}) {
   const shot = project.screenshots[index];

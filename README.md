@@ -7,7 +7,7 @@ A responsive React portfolio based on the supplied CV. Built with React 19, Vite
 Requires Node.js 22 or newer (validated with Node 24).
 
 ```powershell
-cd "E:\nethma samadhi\nethma-portfolio\portfolio"
+cd "E:\GitHub-Projects\nethma-portfolio"
 npm ci
 npm run dev
 ```
@@ -44,15 +44,15 @@ The build prerenders the homepage, all four case studies and a 404 page, includi
 
 ## Project evidence still needed
 
-Project covers are AI-generated concept artwork. Three project repository links were supplied by the owner. Actual application screenshots, live demos, model scores and formal test reports are still needed. The site does not invent these. LinkedIn and GitHub profile links were extracted from the CV's hyperlink annotations.
+Project covers are AI-generated interface concepts. The full prompt set and asset paths are documented in `PROJECT-INTERFACE-ARTWORK.md`. Responsive WebP variants replace the larger PNG covers in the UI. Three project repository links were supplied by the owner. Actual application screenshots, live demos, model scores and formal test reports are still needed. The site does not invent these. LinkedIn and GitHub profile links were extracted from the CV's hyperlink annotations.
 
-To add screenshots, put actual images in `public/projects/` and populate each project's `screenshots` array with `{ src, alt, caption }`. Use descriptive alt text and optimized WebP/AVIF files. `screenshotLabels` controls the gallery slots. Do not add private user data to screenshots.
+To add screenshots, put actual images in `public/projects/` and populate each project's `screenshots` array with `{ src, alt, caption }`. Use descriptive alt text and optimized WebP/AVIF files. The gallery is shown only when actual screenshots are available. Do not add private user data to screenshots.
 
 ## Deploy to Vercel
 
 Import this folder/repository into Vercel using the Vite preset. The included `vercel.json` uses `npm run build`, serves `dist`, and supplies navigation fallback plus basic security headers. No environment variables or backend are needed. Set a custom domain in Vercel if desired. Add canonical URLs and a sitemap only after the final public domain is chosen.
 
-Contact uses `mailto:` and clipboard copy; no contact form or message backend is implied. The mobile navigation supports keyboard access and Escape to close. Motion honors reduced-motion settings. Every project page explicitly labels missing screenshot and testing evidence.
+Contact uses `mailto:` and clipboard copy; no contact form or message backend is implied. The mobile navigation supports keyboard access and Escape to close. Motion honors reduced-motion settings. Generated covers are explicitly labeled. Empty screenshot galleries and undocumented testing sections are hidden; available testing methods retain their evidence notes.
 
 ## Implementation references
 

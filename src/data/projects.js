@@ -2,7 +2,7 @@
 // Screenshot shape: { src: '/projects/example.webp', alt: 'Describe the actual screen', caption: '...' }
 export const projects = [
   {
-    cover: {src: '/projects/finai-concept.png', alt: 'AI-generated concept artwork of a mint calculator, receipt and financial ledger sheets'},
+    cover: {src: '/projects/finai-interface.webp', srcSet: '/projects/finai-interface-768.webp 768w, /projects/finai-interface.webp 1536w', alt: 'AI-generated FinAI interface concept with a spending dashboard, transactions and receipt scanning'},
     slug: 'finai', number: '01', shortTitle: 'FinAI', title: 'FinAI — AI-Powered Financial Intelligence System', category: 'Full-stack development · Applied AI',
     summary: 'A financial application bringing transaction workflows, spending insights and predictive models into one system.',
     overview: 'FinAI is an academic full-stack financial intelligence project. A React and Vite frontend connects to a Python FastAPI backend through REST APIs and JSON, with SQLite persistence. The application combines everyday transaction management with dashboards and machine-learning features.',
@@ -19,7 +19,7 @@ export const projects = [
     screenshotLabels: ['Spending dashboard', 'Transaction workflow', 'Receipt or voice entry'], screenshots: [],
   },
   {
-    cover: {src: '/projects/ayurvedic-medicine-concept.png', alt: 'AI-generated concept artwork of amber apothecary bottles, herbs and inventory cards'},
+    cover: {src: '/projects/ayurvedic-medicine-interface.webp', srcSet: '/projects/ayurvedic-medicine-interface-768.webp 768w, /projects/ayurvedic-medicine-interface.webp 1536w', alt: 'AI-generated Ayurvedic inventory interface concept showing medicine stock and order summaries'},
     slug: 'ayurvedic-medicine', number: '02', shortTitle: 'Ayurvedic Medicine Management', title: 'Ayurvedic Medicine Management System', category: 'Web development · Data management',
     repository: 'https://github.com/Samadhi66/Ayurvedic-Management-System',
     summary: 'A database-backed system for medicine inventory, orders, tracking and reporting.',
@@ -31,7 +31,7 @@ export const projects = [
     screenshotLabels: ['Inventory records', 'Order management', 'Reporting dashboard'], screenshots: [],
   },
   {
-    cover: {src: '/projects/library-management-concept.png', alt: 'AI-generated concept artwork of clothbound books, library catalogue cards and a bookmark'},
+    cover: {src: '/projects/library-management-interface.webp', srcSet: '/projects/library-management-interface-768.webp 768w, /projects/library-management-interface.webp 1536w', alt: 'AI-generated library interface concept showing a book catalogue and member records'},
     slug: 'library-management', number: '03', shortTitle: 'Library Management', title: 'Library Management Website', category: 'Web development · Application workflows',
     repository: 'https://github.com/Samadhi66/Library-Management-Sytem',
     summary: 'A web application for book cataloguing, member management and library workflows.',
@@ -43,7 +43,7 @@ export const projects = [
     screenshotLabels: ['Book catalogue', 'Member management'], screenshots: [],
   },
   {
-    cover: {src: '/projects/cleaning-service-concept.png', alt: 'AI-generated concept artwork of cleaning supplies and an appointment calendar'},
+    cover: {src: '/projects/cleaning-service-interface.webp', srcSet: '/projects/cleaning-service-interface-768.webp 768w, /projects/cleaning-service-interface.webp 1536w', alt: 'AI-generated Android interface concept showing cleaning services and appointment scheduling'},
     slug: 'cleaning-service', number: '04', shortTitle: 'Cleaning Service Mobile App', title: 'Cleaning Service Mobile App', category: 'Mobile development · Service booking',
     repository: 'https://github.com/Samadhi66/Cleaner-App',
     summary: 'A mobile application connecting registration, service booking and appointment scheduling.',
