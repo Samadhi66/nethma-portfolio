@@ -2,18 +2,25 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile, access} from 'node:fs/promises';
 import {projects} from '../src/data/projects.js';
+import {pages} from '../src/data/pages.js';
+const publicRoutes=[...pages.map(page=>page.path),...projects.map(p=>`/projects/${p.slug}`)];
 import {JSDOM} from 'jsdom';
 import {pageMetadata, siteUrl} from '../src/data/seo.js';
 
-test('homepage is prerendered with requested sections in order', async () => {
-  const html = await readFile('dist/index.html','utf8');
-  const ids = ['projects','experience','expertise','about','contact'];
-  const positions = ids.map(id=>html.indexOf(`id="${id}"`));
-  assert.ok(positions.every((position,index)=>position>=0 && (index===0 || position>positions[index-1])));
-  assert.match(html,/Nethma Samadhi/);
+test('homepage contains the hero only; each separate page is prerendered with its own content', async () => {
+  const html=await readFile('dist/index.html','utf8');
+  for(const id of ['projects','experience','expertise','about','contact'])assert.ok(!html.includes(`id="${id}"`));
+  assert.match(html,/NETHMA SAMADHI/);
   assert.match(html,/aria-controls="mobile-nav"/);
   assert.match(html,/Skip to content/);
+  for(const page of pages.filter(page=>page.path!=='/')){
+    const doc=new JSDOM(await readFile(`dist${page.path}/index.html`,'utf8')).window.document;
+    assert.ok(doc.getElementById(page.path.slice(1)));
+    assert.equal(doc.querySelectorAll('h1').length,1);
+    for(const other of pages.filter(other=>other.path!=='/'&&other.path!==page.path))assert.equal(doc.getElementById(other.path.slice(1)),null);
+  }
 });
+
 test('all four case-study routes have unique metadata and real content', async () => {
   assert.equal(projects.length,4);
   for(const project of projects){
@@ -31,7 +38,7 @@ test('all four case-study routes have unique metadata and real content', async (
   }
 });
 test('public pages exclude home address and references', async () => {
-  for(const file of ['dist/index.html',...projects.map(project=>`dist/projects/${project.slug}/index.html`)]){
+  for(const file of publicRoutes.map(route=>`dist${route==='/'?'':route}/index.html`)){
     const html = await readFile(file,'utf8');
     assert.doesNotMatch(html,/Samadhi Sewana|Naran Aththeyaya|Induranga De Silva|Sandaruwani Kulathunga/i);
   }
@@ -42,7 +49,7 @@ test('no invented project URLs or unlabelled screenshots', () => {
 });
 
 test('all pages have matching canonical, social metadata and valid structured data',async()=>{
-  for(const route of ['/',...projects.map(p=>`/projects/${p.slug}`),'/404']){
+  for(const route of [...publicRoutes,'/404']){
     const dom=new JSDOM(await readFile(route==='/404'?'dist/404.html':`dist${route==='/'?'':route}/index.html`,'utf8'));
     const document=dom.window.document;const metadata=pageMetadata(route);
     assert.equal(document.title,metadata.title);
@@ -54,21 +61,21 @@ test('all pages have matching canonical, social metadata and valid structured da
     assert.equal(document.querySelectorAll('h1').length,1);dom.window.close();
   }
 });
-test('crawler files list all five canonical public routes and exclude the error page',async()=>{
+test('crawler files list all canonical public routes and exclude the error page',async()=>{
   const sitemap=await readFile('dist/sitemap.xml','utf8');const robots=await readFile('dist/robots.txt','utf8');
   assert.ok(robots.includes(`Sitemap: ${siteUrl}/sitemap.xml`));
-  assert.equal((sitemap.match(/<loc>/g)||[]).length,5);
-  for(const route of ['/',...projects.map(p=>`/projects/${p.slug}`)])assert.ok(sitemap.includes(`<loc>${siteUrl}${route}</loc>`));
+  assert.equal((sitemap.match(/<loc>/g)||[]).length,publicRoutes.length);
+  for(const route of publicRoutes)assert.ok(sitemap.includes(`<loc>${siteUrl}${route}</loc>`));
   assert.ok(!sitemap.includes('/404'));
 });
 test('every generated local link, anchor, image and responsive source resolves',async()=>{
-  for(const route of ['/',...projects.map(p=>`/projects/${p.slug}`)]){
+  for(const route of publicRoutes){
     const file=`dist${route==='/'?'':route}/index.html`;
     const dom=new JSDOM(await readFile(file,'utf8'),{url:`${siteUrl}${route}`});const document=dom.window.document;
     for(const element of document.querySelectorAll('a[href],img[src],script[src],link[href]')){
       const value=element.getAttribute('href')||element.getAttribute('src');const url=new URL(value,`${siteUrl}${route}`);
       if(url.origin!==siteUrl)continue;
-      const isPage=['/',...projects.map(p=>`/projects/${p.slug}`)].includes(url.pathname);
+      const isPage=publicRoutes.includes(url.pathname);
       const target=isPage?`dist${url.pathname==='/'?'':url.pathname}/index.html`:`dist${decodeURIComponent(url.pathname)}`;
       await access(target);
       if(url.hash){const targetDom=new JSDOM(await readFile(target,'utf8'));assert.ok(targetDom.window.document.getElementById(url.hash.slice(1)),value);targetDom.window.close();}
@@ -81,7 +88,8 @@ test('every generated local link, anchor, image and responsive source resolves',
 test('Vercel serves known prerendered routes without a catch-all soft 404 rewrite',async()=>{
   const config=JSON.parse(await readFile('vercel.json','utf8'));
   assert.equal(config.outputDirectory,'dist');assert.equal(config.framework,'vite');
-  assert.equal(config.rewrites.length,projects.length);
+  assert.equal(config.rewrites.length,publicRoutes.length-1);
+  for(const route of publicRoutes.filter(route=>route!=='/'))assert.ok(config.rewrites.some(r=>r.source===route&&r.destination===`${route}/index.html`));
   for(const project of projects)assert.ok(config.rewrites.some(r=>r.source===`/projects/${project.slug}`&&r.destination===`/projects/${project.slug}/index.html`));
   await access('dist/404.html');assert.equal((await readFile('dist/Nethma-Samadhi-CV.pdf')).subarray(0,5).toString(),'%PDF-');
 });

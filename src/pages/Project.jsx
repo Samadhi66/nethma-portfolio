@@ -14,7 +14,7 @@ export default function Project() {
   const next = projects[(projects.indexOf(project)+1)%projects.length];
   return <>
     <section className="case-hero container" aria-labelledby="case-title">
-      <Link className="back-link" to="/#projects"><ArrowLeft size={17} aria-hidden="true"/>All projects</Link>
+      <Link className="back-link" to="/projects"><ArrowLeft size={17} aria-hidden="true"/>All projects</Link>
       <Reveal><p className="eyebrow">PROJECT {project.number} / ACADEMIC WORK</p><h1 id="case-title">{project.title}</h1><p className="case-summary">{project.summary}</p><div className="case-links">{project.repository&&<ExternalLink className="button button-outline" href={project.repository}>View source on GitHub</ExternalLink>}{project.demo&&<ExternalLink className="text-link" href={project.demo}>View live demo</ExternalLink>}</div></Reveal>
       <dl className="case-meta"><div><dt>CONTEXT</dt><dd>Academic project</dd></div><div><dt>FOCUS</dt><dd>{project.category}</dd></div><div><dt>TECHNOLOGIES</dt><dd><Tags items={project.technologies}/></dd></div></dl>
       <ProjectCover project={project} priority/>

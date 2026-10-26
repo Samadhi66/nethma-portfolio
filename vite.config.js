@@ -1,10 +1,11 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { projects } from './src/data/projects.js';
+import { pages } from './src/data/pages.js';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-const prerenderedRoutes = new Set(projects.map(project => `/projects/${project.slug}`));
+const prerenderedRoutes = new Set([...pages.filter(page=>page.path!=='/').map(page=>page.path),...projects.map(project => `/projects/${project.slug}`)]);
 export default defineConfig({plugins: [react(), {
   name: 'prerendered-preview-routes',
   configurePreviewServer(server) {

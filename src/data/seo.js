@@ -1,5 +1,6 @@
 import { profile } from './profile.js';
 import { projects } from './projects.js';
+import { pages } from './pages.js';
 
 export const siteUrl = 'https://nethma.vercel.app';
 export const socialImage = `${siteUrl}/images/nethma-samadhi-social.jpg`;
@@ -7,11 +8,12 @@ export const socialImage = `${siteUrl}/images/nethma-samadhi-social.jpg`;
 export function pageMetadata(pathname) {
   const path = pathname.replace(/\/+$/, '') || '/';
   const project = projects.find(item => path === `/projects/${item.slug}`);
-  const found = path === '/' || Boolean(project);
+  const page = pages.find(item => item.path === path);
+  const found = Boolean(page || project);
   return {
     path, found,
-    title: project ? `${project.shortTitle} | Nethma Samadhi` : found ? 'Nethma Samadhi | Software Engineering, Web & Data' : 'Page not found | Nethma Samadhi',
-    description: project?.summary || 'Meet Nethma Samadhi, a Software Engineering undergraduate with hands-on full-stack, QA and data projects, and Web Content & SEO experience at eBEYONDS.',
+    title: project ? `${project.shortTitle} | Nethma Samadhi` : page?.title || 'Page not found | Nethma Samadhi',
+    description: project?.summary || page?.description || 'This page could not be found. Return to Nethma Samadhi’s portfolio.',
     canonical: `${siteUrl}${path === '/' ? '/' : path}`,
     robots: found ? 'index, follow' : 'noindex, follow',
     schema: found ? project ? {

@@ -27,35 +27,94 @@ const {default:TestApp}=await server.ssrLoadModule('/tests/TestApp.jsx');
 const {projects}=await import('../src/data/projects.js');
 const {profile}=await import('../src/data/profile.js');
 const {pageMetadata}=await import('../src/data/seo.js');
+const {pages}=await import('../src/data/pages.js');
 const mount=path=>render(React.createElement(TestApp,{path}));
 afterEach(()=>cleanup());
 after(async()=>{await server.close();dom.window.close();});
 
-test('homepage renders the requested identity, five sections and four project links',async()=>{
+test('homepage contains the hero and navigation to separate pages',async()=>{
   mount('/');
   assert.ok(screen.getByRole('heading',{level:1,name:"Hi, I'm Nethma Samadhi."}));
   const nav=screen.getByRole('navigation',{name:'Primary navigation'});
-  assert.equal(nav.querySelectorAll('a').length,5);
-  for(const project of projects)assert.equal(screen.getByRole('link',{name:`Read ${project.shortTitle} case study`}).getAttribute('href'),`/projects/${project.slug}`);
+  assert.equal(nav.querySelectorAll('a').length,6);
+  assert.equal(screen.getByRole('link',{name:'EXPLORE PROJECTS'}).getAttribute('href'),'/projects');
+  for(const id of ['projects','experience','expertise','about','contact'])assert.equal(document.getElementById(id),null);
+  assert.match(screen.getByRole('img',{name:'Portrait of Nethma Samadhi'}).getAttribute('src'),/hero-final.webp/);
   await waitFor(()=>assert.equal(document.title,pageMetadata('/').title));
 });
-test('every project card opens its case study and return navigation focuses Projects',async()=>{
+test('every page has a complete footer and no CV download controls',()=>{
+  for(const route of [...pages.map(page=>page.path),...projects.map(project=>`/projects/${project.slug}`),'/missing']){
+    mount(route);
+    const footer=screen.getByRole('contentinfo');
+    const nav=screen.getByRole('navigation',{name:'Footer navigation'});
+    assert.equal(nav.querySelectorAll('a').length,pages.length);
+    for(const page of pages)assert.ok([...nav.querySelectorAll('a')].some(link=>link.getAttribute('href')===page.path));
+    assert.ok(footer.querySelector('a[href="tel:+94770569658"]'));
+    assert.ok(footer.querySelector(`a[href="mailto:${profile.email}"]`));
+    assert.equal(document.querySelectorAll('a[download]').length,0);
+    assert.equal(document.querySelectorAll(`a[href="${profile.cv}"]`).length,0);
+    cleanup();
+  }
+});
+
+test('footer links navigate from a case study to the selected page',async()=>{
+  mount('/projects/finai');
+  const nav=screen.getByRole('navigation',{name:'Footer navigation'});
+  fireEvent.click([...nav.querySelectorAll('a')].find(link=>link.getAttribute('href')==='/about'));
+  assert.ok(screen.getByRole('heading',{level:1,name:'About Me'}));
+  await waitFor(()=>assert.equal(document.querySelector('link[rel="canonical"]').href,'https://nethma.vercel.app/about'));
+});
+
+test('every project card opens its case study and returns to the Projects page',async()=>{
   for(const project of projects){
-    mount('/');
+    mount('/projects');
     fireEvent.click(screen.getByRole('link',{name:`Read ${project.shortTitle} case study`}));
     assert.ok(screen.getByRole('heading',{level:1,name:project.title}));
     await waitFor(()=>assert.equal(document.querySelector('link[rel="canonical"]').href,`https://nethma.vercel.app/projects/${project.slug}`));
     fireEvent.click(screen.getByRole('link',{name:'All projects',exact:true}));
-    await waitFor(()=>assert.equal(document.activeElement.id,'projects'));
+    await waitFor(()=>assert.equal(document.activeElement.id,'main'));
+    assert.ok(document.getElementById('projects'));
     cleanup();
   }
 });
-test('global section navigation works from a case study, including Contact',async()=>{
+
+test('project filters show the matching case studies and restore the full collection',()=>{
+  mount('/projects');
+  const group=screen.getByRole('group',{name:'Filter projects'});
+  const button=name=>[...group.querySelectorAll('button')].find(item=>item.textContent===name);
+  const cards=()=>document.querySelectorAll('#projects .project-visual-link');
+  fireEvent.click(button('Mobile'));
+  assert.equal(cards().length,1);
+  assert.equal(cards()[0].getAttribute('href'),'/projects/cleaning-service');
+  assert.equal(button('Mobile').getAttribute('aria-pressed'),'true');
+  fireEvent.click(button('Web & data'));
+  assert.equal(cards().length,3);
+  assert.ok([...cards()].every(card=>!card.getAttribute('href').includes('cleaning-service')));
+  fireEvent.click(button('All projects'));
+  assert.equal(cards().length,4);
+});
+
+test('skill category filters show only the selected category and can restore all skills',()=>{
+  mount('/expertise');
+  const group=screen.getByRole('group',{name:'Filter skill categories'});
+  const button=name=>[...group.querySelectorAll('button')].find(item=>item.textContent===name);
+  const count=document.querySelectorAll('.skill-card').length;
+  fireEvent.click(button('Web & SEO'));
+  assert.equal(document.querySelectorAll('.skill-group').length,1);
+  assert.equal(document.querySelector('.skill-group h3').textContent,'Web & SEO');
+  assert.ok(document.querySelectorAll('.skill-card').length<count);
+  fireEvent.click(button('All skills'));
+  assert.equal(document.querySelectorAll('.skill-group').length,4);
+  assert.equal(document.querySelectorAll('.skill-card').length,count);
+});
+test('global page navigation works from a case study, including Contact',async()=>{
   mount('/projects/finai');
   const nav=screen.getByRole('navigation',{name:'Primary navigation'});
   fireEvent.click([...nav.querySelectorAll('a')].find(a=>a.textContent==='Contact'));
-  await waitFor(()=>assert.equal(document.activeElement.id,'contact'));
-  assert.ok(screen.getByRole('heading',{level:1,name:"Hi, I'm Nethma Samadhi."}));
+  await waitFor(()=>assert.equal(document.activeElement.id,'main'));
+    assert.ok(document.getElementById('contact'));
+  assert.ok(screen.getByRole('heading',{level:1,name:'Let’s Work Together'}));
+  assert.equal(document.querySelector('link[rel="canonical"]').href,'https://nethma.vercel.app/contact');
 });
 test('mobile disclosure focuses first link; Escape closes and restores toggle focus',async()=>{
   const user=userEvent.setup({document});
@@ -76,7 +135,8 @@ test('mobile navigation closes on selection and outside pointer without stealing
   await user.click(screen.getByRole('button',{name:'Open navigation'}));
   const mobile=screen.getByRole('navigation',{name:'Mobile navigation'});
   await user.click([...mobile.querySelectorAll('a')].find(a=>a.textContent==='Expertise'));
-  await waitFor(()=>assert.equal(document.activeElement.id,'expertise'));
+  await waitFor(()=>assert.equal(document.activeElement.id,'main'));
+  assert.ok(document.getElementById('expertise'));
   assert.equal(mobile.hidden,true);
   await user.click(screen.getByRole('button',{name:'Open navigation'}));
   assert.notEqual(document.activeElement,mobile.querySelector('a'));
@@ -97,7 +157,8 @@ test('touch focus changes cannot dismiss the menu before a link or toggle click'
     fireEvent.pointerDown(contact,{pointerType:'touch'});
     assert.equal(mobile.hidden,false);
     fireEvent.click(contact,{detail:1});
-    await waitFor(()=>assert.equal(document.activeElement.id,'contact'));
+    await waitFor(()=>assert.equal(document.activeElement.id,'main'));
+    assert.ok(document.getElementById('contact'));
     assert.equal(mobile.hidden,true);
   }
   fireEvent.click(toggle,{detail:1});
@@ -106,7 +167,7 @@ test('touch focus changes cannot dismiss the menu before a link or toggle click'
   assert.equal(toggle.getAttribute('aria-expanded'),'false');
 });
 test('copy email writes the address and announces accessible success',async()=>{
-  mount('/');let copied;
+  mount('/contact');let copied;
   Object.defineProperty(navigator,'clipboard',{value:{writeText:async text=>{copied=text;}},configurable:true});
   await waitFor(()=>assert.equal(document.activeElement.id,'main'));
   fireEvent.click(screen.getByRole('button',{name:'Copy email address'}));
@@ -116,7 +177,7 @@ test('copy email writes the address and announces accessible success',async()=>{
   assert.equal(screen.getByRole('link',{name:'077 056 9658'}).getAttribute('href'),'tel:+94770569658');
 });
 test('clipboard denial gives a usable selection fallback without false success',async()=>{
-  mount('/');Object.defineProperty(navigator,'clipboard',{value:{writeText:async()=>{throw Error('denied');}},configurable:true});
+  mount('/contact');Object.defineProperty(navigator,'clipboard',{value:{writeText:async()=>{throw Error('denied');}},configurable:true});
   await waitFor(()=>assert.equal(document.activeElement.id,'main'));
   fireEvent.click(screen.getByRole('button',{name:'Copy email address'}));
   await waitFor(()=>assert.match(screen.getByRole('status').textContent,/Copy is unavailable/));
@@ -137,17 +198,18 @@ test('unknown route shows a useful 404 and noindex metadata',async()=>{
   fireEvent.click(screen.getByRole('link',{name:'Back to portfolio'}));
   await waitFor(()=>assert.equal(document.querySelector('meta[name="robots"]').content,'index, follow'));
 });
-test('same-section links scroll again; malformed hash remains safe',async()=>{
+test('legacy section bookmarks redirect to the corresponding pages; malformed hashes remain safe',async()=>{
+  for(const page of pages.filter(page=>page.path!=='/')){
+    mount('/#'+page.path.slice(1));
+    await waitFor(()=>assert.equal(document.querySelector('link[rel="canonical"]').href,'https://nethma.vercel.app'+page.path));
+    assert.equal(screen.getByRole('navigation',{name:'Primary navigation'}).querySelector('[aria-current="page"]').getAttribute('href'),page.path);
+    cleanup();
+  }
   mount('/#%E0%A4%A');
-  const nav=screen.getByRole('navigation',{name:'Primary navigation'});
-  const link=nav.querySelector('a');fireEvent.click(link);
-  await waitFor(()=>assert.equal(document.getElementById('projects').dataset.scrolled,'true'));
-  delete document.getElementById('projects').dataset.scrolled;
-  fireEvent.click(link);
-  await waitFor(()=>assert.equal(document.getElementById('projects').dataset.scrolled,'true'));
+  assert.ok(screen.getByRole('heading',{level:1,name:"Hi, I'm Nethma Samadhi."}));
 });
 test('DOM accessibility checks pass on homepage, all cases and 404',async()=>{
-  for(const route of ['/',...projects.map(p=>`/projects/${p.slug}`),'/missing']){
+  for(const route of [...pages.map(page=>page.path),...projects.map(p=>`/projects/${p.slug}`),'/missing']){
     mount(route);
     await waitFor(()=>assert.equal(document.activeElement.id,'main'));
     const result=await axe.run(document.documentElement,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']},rules:{'color-contrast':{enabled:false}}});

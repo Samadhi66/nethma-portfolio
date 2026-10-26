@@ -2,11 +2,12 @@ import { createServer } from 'vite';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { projects } from '../src/data/projects.js';
+import { pages } from '../src/data/pages.js';
 import { pageMetadata, siteUrl } from '../src/data/seo.js';
 
 const server = await createServer({server:{middlewareMode:true},appType:'custom'});
 const escape = value => value.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;');
-const routes = ['/',...projects.map(project=>`/projects/${project.slug}`),'/404'];
+const routes = [...pages.map(page=>page.path),...projects.map(project=>`/projects/${project.slug}`),'/404'];
 try {
   const {render} = await server.ssrLoadModule('/src/entry-server.jsx');
   const template = await readFile('dist/index.html','utf8');
